@@ -70,6 +70,14 @@ source .venv/bin/activate  ## Linux/macOS
 
 ### 3) Instalar dependências
 
+Atualize pip:
+
+```bash
+pip install -U pip
+```
+
+Instalação de dependências:
+
 ```bash
 pip install -e .
 ```
