@@ -209,3 +209,8 @@ __marimo__/
 # Outros
 ml_tokens.json
 files.md
+2src
+*.egg-info/
+dist/
+build/
+__pycache__/
