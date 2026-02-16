@@ -1,239 +1,310 @@
-# led-tools-api-mercado-livre
+# Led.Tools Mercado Livre API
 
-Integração em Python com a API do Mercado Livre focada na loja **Led.Tools**, incluindo:
+Cliente modular em Python para integração com a API do Mercado Livre, com foco em **listagem de produtos, detalhes de itens e exportação de dados de vendedores**.
 
-- Autenticação OAuth2 (authorization code + refresh token)
-- Scripts para obtenção e renovação de tokens
-- Consulta de detalhes de produtos
-- Exportação de dados de anúncios
-- Base para analytics de marketplace
+O projeto foi projetado para ser:
 
-Este projeto foi criado para estudar e utilizar a API oficial do Mercado Livre em cenários reais de e-commerce.
+* Modular
+* Fácil de manter
+* Pronto para produção
+* Simples de expandir (orders, analytics, etc.)
+* Usável via CLI  
 
-## Objetivo do projeto
+## Visão Geral
 
-Este repositório tem como finalidade:
+Este projeto fornece uma camada organizada sobre a API do Mercado Livre para:
 
-- Aprender na prática a API do Mercado Livre
-- Construir uma base de coleta de dados para analytics
-- Automatizar consultas de anúncios e produtos
-- Preparar infraestrutura para uso futuro com a Led.Tools
+* Autenticação OAuth2
+* Refresh automático de token
+* Listagem de itens de vendedores
+* Consulta de detalhes de produtos
+* Normalização de dados de itens
+* Exportação de dados em JSON
+* Uso via comandos CLI
 
-## Estrutura do projeto
+Ele separa claramente:
 
-```output
+* Lógica de autenticação
+* Cliente HTTP
+* Cliente Mercado Livre
+* Normalização de dados
+* Interfaces CLI
 
-.
-├── README.md
-└── src
-├── access-token.py
-├── export_led_tools_public.py
-├── list_ledtools_items.py
-├── ml_details.py
-├── ml_item_details.py
-├── ml_refresh_token.py
-├── ml_tokens.json
-└── requirements.txt
+## Estrutura do Projeto
 
-```
+```folders
+src/
+  ledtools_ml/
+    config.py
+    tokens.py
+    oauth.py
+    http.py
+    ml.py
+    normalize.py
 
-### Descrição dos scripts
+  cli/
+    ml_get_token.py
+    ml_refresh_token.py
+    ml_details.py
+    export_seller_items.py
 
-### `access-token.py`
-
-Troca o `authorization_code` por:
-
-- access_token  
-- refresh_token  
-
-Primeiro passo após autorizar o app no Mercado Livre.
-
-### `ml_refresh_token.py`
-
-Renova automaticamente o access token usando:
-
-```output
-
-grant_type=refresh_token
-
-```
-
-Essencial para manter a integração funcionando sem novo login.
-
-### `ml_tokens.json`
-Armazena:
-
-- access_token
-- refresh_token
-- expires_in
-- metadados do token
-
-Nunca deve ser commitado com tokens reais.
-
-### `export_led_tools_public.py`
-
-Script de exportação de anúncios.
-
-Possui:
-
-- paginação
-- retries
-- normalização de dados
-- detecção de PolicyAgent
-- modo público vs modo seller
-
-### `list_ledtools_items.py`
-
-Lista anúncios da conta do vendedor via:
-
-```output
-
-/users/{USER_ID}/items/search
-
-```
-
-Requer token autorizado pelo vendedor.
-
-### `ml_item_details.py`
-
-Consulta detalhes de um único anúncio via:
-
-```output
-
-/items/{ITEM_ID}
-
-```
-
-Aceita:
-
-- ID direto
-- URL do Mercado Livre
-
-### `ml_details.py`
-
-Script flexível que detecta automaticamente:
-
-- item (listing)
-- product (catálogo)
-
-E chama:
-
-```output
-
-/items/{id}
-/products/{id}
-
+requirements.txt
 ```
 
 ## Instalação
 
-Clone o repositório:
+### 1) Clonar o repositório
 
 ```bash
 git clone https://github.com/SamuelBarbosaDev/led-tools-api-mercado-livre.git
-cd led-tools-api-mercado-livre/src
-````
+cd led-tools-api-mercado-livre
+```
 
-Instale dependências:
+### 2) Criar ambiente virtual
 
 ```bash
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate  ## Linux/macOS
+.venv\Scripts\activate     ## Windows
 ```
 
-## Configuração OAuth
-
-1. Crie um app no Mercado Livre Developers
-2. Configure uma Redirect URI
-3. Gere o authorization code
-4. Execute:
-
-    ```bash
-    python access-token.py
-    ```
-
-5. Tokens serão salvos em `ml_tokens.json`
-
-## Renovar token
+### 3) Instalar dependências
 
 ```bash
-python ml_refresh_token.py
+pip install -e .
 ```
 
-## Exemplos de uso
-
-### Detalhes de um produto
+Instalação para desenvolvimento (com ferramentas de teste/lint):
 
 ```bash
-python ml_item_details.py MLB123456789
+pip install -e ".[dev]"
 ```
 
-ou
+## Configuração
+
+Crie um arquivo `.env`:
+
+```
+ML_CLIENT_ID=SEU_CLIENT_ID
+ML_CLIENT_SECRET=SEU_CLIENT_SECRET
+ML_REDIRECT_URI=SEU_REDIRECT_URI
+
+ML_TOKENS_FILE=ml_tokens.json
+ML_SELLER_USER_ID=570565928
+ML_SITE_ID=MLB
+```
+
+## Fluxo de Autenticação
+
+### 1) Obter authorization code
+
+Abra no navegador:
+
+```
+https://auth.mercadolivre.com.br/authorization
+ ?response_type=code
+ &client_id=SEU_CLIENT_ID
+ &redirect_uri=SEU_REDIRECT_URI
+```
+
+Após login/autorização, você receberá um `code`.
+
+### 2) Trocar code por token
 
 ```bash
-python ml_item_details.py "https://produto.mercadolivre.com.br/..."
+ml-get-token SEU_CODE
 ```
 
-### Exportar anúncios
+Isso gera `ml_tokens.json` com:
+
+* access_token
+* refresh_token
+* expires_in
+
+### 3) Refresh de token
+
+Manual:
 
 ```bash
-python export_led_tools_public.py
+ml-refresh-token
 ```
 
-## Limitações importantes da API
+Automático:
 
-A API do Mercado Livre possui restrições de acesso.
+* O projeto faz refresh automaticamente ao receber 401.
 
-Endpoints como:
+## Como Usar
 
-```output
-/sites/MLB/search
-/items/{id}
-/users/{id}/items/search
+### Exportar itens de um vendedor
+
+```bash
+ml-export-seller-items SELLER_ID
 ```
 
-podem retornar:
+Exemplo:
 
-```output
-403 - blocked_by: PolicyAgent
+```bash
+ml-export-seller-items 570565928
 ```
 
-Isso significa:
+Gera:
 
-* O recurso está bloqueado por política interna do Mercado Livre
-* Nem sempre depende de token ou escopo
-* Pode exigir autorização do vendedor ou liberação do app
+```file
+items.json
+```
 
-Este projeto já trata esses cenários e falha de forma explícita.
+Opcionalmente:
 
-## Aprendizados com este projeto
+```bash
+ml-export-seller-items 570565928 -o meus_itens.json
+```
 
-* OAuth2 completo na prática
-* Rotação de refresh token
-* Tratamento de rate limit e retries
-* Diagnóstico de erros 401 vs 403
-* Limitações reais de APIs de marketplace
-* Estruturação de coletores de dados
+Com campos normalizados:
 
-## Uso futuro com a Led.Tools
+* id
+* title
+* price
+* sold_quantity
+* available_quantity
+* permalink
+* picture_url
+* free_shipping
+* logistic_type
 
-Quando a Led.Tools autorizar o app:
+### Consultar detalhes de um item
 
-* Será possível listar anúncios da conta
-* Acessar dados de vendas
-* Construir analytics completos
-* Automatizar monitoramento de catálogo
+```bash
+ml-details MLB123456789
+```
+
+Retorna JSON normalizado do item.
+
+## Módulos Internos
+
+### config.py
+
+Centraliza variáveis de ambiente:
+
+* Credenciais
+* Timeouts
+* Paths
+* Configurações do site
+
+Evita hardcode e facilita deploy.
+
+### tokens.py
+
+Responsável por:
+
+* Ler tokens do arquivo
+* Salvar tokens
+* Extrair access/refresh token
+
+Suporta múltiplos formatos de JSON.
+
+### oauth.py
+
+Implementa OAuth:
+
+* exchange_code_for_token
+* refresh_access_token
+
+Isola totalmente a lógica de autenticação.
+
+### http.py
+
+Cliente HTTP robusto:
+
+* Injeta Bearer token automaticamente
+* Refresh automático em 401
+* Retry em:
+
+  * 429
+  * 5xx
+* Timeout configurável
+
+É o coração da resiliência do projeto.
+
+### ml.py
+
+Cliente Mercado Livre:
+
+* list_item_ids_public
+* list_item_ids_for_user
+* get_item
+
+Centraliza endpoints ML.
+
+### normalize.py
+
+Padroniza dados de itens:
+
+* Extrai imagem principal
+* Normaliza shipping
+* Garante shape consistente
+
+Ideal para analytics.
+
+## Boas Práticas Implementadas
+
+* Separação de responsabilidades
+* Código reutilizável
+* Refresh automático de token
+* Tratamento de rate limit
+* Normalização consistente de dados
+* Estrutura pronta para escalar
+* CLI profissional
+* Uso de `pyproject.toml` moderno
+
+## Possíveis Extensões Futuras
+
+O projeto foi pensado para crescer. Exemplos:
+
+### Orders API
+
+* Vendas por período
+* Receita
+* Status de pedidos
+
+### Analytics
+
+* Dashboard de vendas
+* KPIs por categoria
+* Histórico de preços
+
+### Performance
+
+* Async (aiohttp)
+* Paralelismo
+* Cache local
+
+### Data Engineering
+
+* Export para Excel
+* Integração com BI
+* Pipeline ETL
 
 ## Segurança
 
-Nunca exponha:
+Nunca commite:
 
-* client_secret
-* access_token
-* refresh_token
+* `.env`
+* `ml_tokens.json`
+* Credenciais OAuth
 
-Adicione ao `.gitignore`:
+Use `.gitignore`.
 
-```
-ml_tokens.json
-.env
-```
+## Contribuições
+
+Pull requests são bem-vindos.
+
+Sugestões:
+
+* Melhorar cobertura de testes
+* Implementar async client
+* Adicionar Orders API
+* Criar dashboard de exemplo
+
+## Licença
+
+MIT License (ou a que você preferir).
