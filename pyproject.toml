@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "led-tools-api-mercado-livre"
+version = "0.1.0"
+description = "Ferramentas internas para integração com a API do Mercado Livre."
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+  "requests>=2.31.0",
+  "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "ruff>=0.5.0",
+]
+
+[project.scripts]
+ml-get-token = "cli.ml_get_token:main"
+ml-refresh-token = "cli.ml_refresh_token:main"
+ml-details = "cli.ml_details:main"
+ml-export-seller-items = "cli.export_seller_items:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
