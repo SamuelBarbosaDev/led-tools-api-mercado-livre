@@ -1,0 +1,14 @@
+certifi==2026.1.4
+charset-normalizer==3.4.4
+dotenv==0.9.9
+idna==3.11
+iniconfig==2.3.0
+-e git+ssh://git@github.com/SamuelBarbosaDev/led-tools-api-mercado-livre.git@71fa21ce49f0d582b813b3dd92e71b005960223b#egg=led_tools_api_mercado_livre
+packaging==26.0
+pluggy==1.6.0
+Pygments==2.19.2
+pytest==9.0.2
+python-dotenv==1.2.1
+requests==2.32.5
+ruff==0.15.1
+urllib3==2.6.3
