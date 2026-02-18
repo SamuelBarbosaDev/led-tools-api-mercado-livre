@@ -1,0 +1,62 @@
+[
+  {
+    "id": "MLB100000001",
+    "title": "Luminária LED Solar Jardim 100W",
+    "category": "Iluminação",
+    "price": 149.9,
+    "sold_quantity": 32,
+    "available_quantity": 18,
+    "permalink": "https://produto.mercadolivre.com.br/MLB100000001",
+    "picture_url": "https://http2.mlstatic.com/D_100000001.jpg",
+    "free_shipping": true,
+    "logistic_type": "fulfillment"
+  },
+  {
+    "id": "MLB100000002",
+    "title": "Cadeira Gamer Ergonômica Reclinável",
+    "category": "Cadeiras",
+    "price": 899.0,
+    "sold_quantity": 12,
+    "available_quantity": 7,
+    "permalink": "https://produto.mercadolivre.com.br/MLB100000002",
+    "picture_url": "https://http2.mlstatic.com/D_100000002.jpg",
+    "free_shipping": false,
+    "logistic_type": "cross_docking"
+  },
+  {
+    "id": "MLB100000003",
+    "title": "Torneira Gourmet Monocomando Inox",
+    "category": "Metais para Cozinha",
+    "price": 219.5,
+    "sold_quantity": 54,
+    "available_quantity": 25,
+    "permalink": "https://produto.mercadolivre.com.br/MLB100000003",
+    "picture_url": "https://http2.mlstatic.com/D_100000003.jpg",
+    "free_shipping": true,
+    "logistic_type": "fulfillment"
+  },
+  {
+    "id": "MLB100000004",
+    "title": "Parafusadeira Furadeira 21V Bivolt",
+    "category": "Ferramentas",
+    "price": 299.99,
+    "sold_quantity": 41,
+    "available_quantity": 14,
+    "permalink": "https://produto.mercadolivre.com.br/MLB100000004",
+    "picture_url": "https://http2.mlstatic.com/D_100000004.jpg",
+    "free_shipping": true,
+    "logistic_type": "fulfillment"
+  },
+  {
+    "id": "MLB100000005",
+    "title": "Refletor LED 200W Prova d'Água",
+    "category": "Iluminação",
+    "price": 129.9,
+    "sold_quantity": 67,
+    "available_quantity": 30,
+    "permalink": "https://produto.mercadolivre.com.br/MLB100000005",
+    "picture_url": "https://http2.mlstatic.com/D_100000005.jpg",
+    "free_shipping": false,
+    "logistic_type": "cross_docking"
+  }
+]
