@@ -172,12 +172,35 @@ Com campos normalizados:
 * id
 * title
 * price
-* sold_quantity
+* **sold_quantity**
 * available_quantity
 * permalink
 * picture_url
 * free_shipping
 * logistic_type
+* category_id
+* category
+
+### Exportando JSON para Excel
+
+Se seu JSON chama **items.json**:
+
+```bash
+python src/cli/json_to_excel.py items.json
+```
+
+Vai gerar:
+
+```file
+items.xlsx
+```
+
+Ou com saída custom:
+
+```bash
+python src/cli/json_to_excel.py items.json -o relatorio_itens.xlsx
+```
+
 
 ### Consultar detalhes de um item
 

@@ -37,3 +37,20 @@ def get_item(item_id: str):
             "User-Agent": "get_item/1.0",
         }
     )
+
+_category_cache: dict[str, str] = {}
+
+def get_category_name(category_id: str) -> str | None:
+    if not category_id:
+        return None
+
+    if category_id in _category_cache:
+        return _category_cache[category_id]
+
+    data = request_json("GET", f"{BASE}/categories/{category_id}")
+    name = data.get("name")
+
+    if name:
+        _category_cache[category_id] = name
+
+    return name
