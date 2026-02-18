@@ -92,7 +92,7 @@ pip install -e ".[dev]"
 
 Crie um arquivo `.env`:
 
-```
+```env
 ML_CLIENT_ID=SEU_CLIENT_ID
 ML_CLIENT_SECRET=SEU_CLIENT_SECRET
 ML_REDIRECT_URI=SEU_REDIRECT_URI
@@ -108,7 +108,7 @@ ML_SITE_ID=MLB
 
 Abra no navegador:
 
-```
+```url
 https://auth.mercadolivre.com.br/authorization
  ?response_type=code
  &client_id=SEU_CLIENT_ID
@@ -200,7 +200,6 @@ Ou com saída custom:
 ```bash
 python src/cli/json_to_excel.py items.json -o relatorio_itens.xlsx
 ```
-
 
 ### Consultar detalhes de um item
 
