@@ -54,3 +54,6 @@ def get_category_name(category_id: str) -> str | None:
         _category_cache[category_id] = name
 
     return name
+
+def get_user_product_stock(user_product_id: str):
+    return request_json("GET", f"{BASE}/user-products/{user_product_id}/stock")
